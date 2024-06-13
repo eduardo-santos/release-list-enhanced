@@ -380,7 +380,7 @@ export function App(props) {
       <div className="input-group">
         <label htmlFor="authToken">GitHub Token:</label>
         <input
-          type="text"
+          type="password"
           id="authToken"
           value={tmpAuthToken}
           onChange={(e) => setTmpAuthToken(e.target.value)}
