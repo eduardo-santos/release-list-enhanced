@@ -177,6 +177,18 @@ export const filterVersions = (versions, filters, fromVersion, toVersion) => {
   });
 };
 
+export const filterDropdownVersions = (versions, filters) => {
+  if (!filters.includeRc) {
+    versions = versions.filter((v) => !v?.toLowerCase().includes("rc"));
+  }
+
+  if (!filters.includeBeta) {
+    versions = versions.filter((v) => !v?.toLowerCase().includes("beta"));
+  }
+
+  return versions;
+};
+
 const matchesFilters = (version, filters) => {
   const [major, minor, patch] = version.tagName
     .substring(1)
