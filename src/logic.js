@@ -186,6 +186,8 @@ export const filterDropdownVersions = (versions, filters) => {
     versions = versions.filter((v) => !v?.toLowerCase().includes("beta"));
   }
 
+  versions = versions.filter((v) => !v?.toLowerCase().includes("preview"));
+
   return versions;
 };
 
