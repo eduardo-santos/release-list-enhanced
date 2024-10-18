@@ -10,6 +10,7 @@ import {
   getAvailableVersions,
   getReleaseNotes,
   filterVersions,
+  filterDropdownVersions,
   authenticateOctokit,
   normalizeVersion,
 } from "./logic";
@@ -61,9 +62,6 @@ export function App(props) {
   const [error, setError] = React.useState(null);
   const [fromVersion, setFromVersion] = useState("");
   const [toVersion, setToVersion] = useState("");
-  // const [repoUrl, setRepoUrl] = useState(
-  //   "https://github.com/facebook/react-native/"
-  // );
   const [repoUrl, setRepoUrl] = useState(
     "https://github.com/facebook/react-native/releases"
   );
@@ -74,8 +72,8 @@ export function App(props) {
     includePatch: true,
     includeMinor: true,
     includeMajor: true,
-    includeBeta: true,
-    includeRc: true,
+    includeBeta: false,
+    includeRc: false,
   });
   const [authToken, setAuthToken] = useState("");
   const [tmpAuthToken, setTmpAuthToken] = useState("");
@@ -84,16 +82,16 @@ export function App(props) {
   const { owner, repo } = useMemo(() => extractRepoInfo(repoUrl), [repoUrl]);
 
   const fetchAllAvailableVersions = async () => {
+    setError(null);
     setLoading(true);
 
     try {
       const versions = await getAvailableVersions(owner, repo);
-      setAvailableVersions(versions);
-      // setFilteredVersions(
-      //   filterVersions(versions, {
-      //     ...filters,
-      //   })
-      // );
+
+      // setAvailableVersions(versions);
+      if (versions) {
+        setAvailableVersions(filterDropdownVersions(versions, filters));
+      }
     } catch (error) {
       setError(error.message);
     } finally {
@@ -190,7 +188,7 @@ export function App(props) {
       //     toVersion
       //   )
       // );
-      setError();
+      setError(null);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -249,7 +247,7 @@ export function App(props) {
           />
           Patch
         </label>
-        <label>
+        {/* <label>
           <input
             type="checkbox"
             name="includeBeta"
@@ -266,7 +264,7 @@ export function App(props) {
             onChange={handleFilterChange}
           />
           RC
-        </label>
+        </label> */}
       </div>
     );
   };
