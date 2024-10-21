@@ -82,6 +82,14 @@ export const getAvailableVersions = async (owner, repo) => {
 
 export const normalizeVersion = (version) => {
   if (typeof version !== "string") return null;
+
+  // If the version includes a package name, strip it
+  const atIndex = version.lastIndexOf("@");
+  if (atIndex !== -1) {
+    version = version.slice(atIndex + 1);
+  }
+
+  // If the version starts with "v", remove it
   if (version.startsWith("v")) {
     version = version.slice(1);
   }
@@ -101,6 +109,7 @@ export const normalizeVersion = (version) => {
 
 export async function getReleaseNotes(owner, repo, fromVersion, toVersion) {
   let releases = await getAllRepoReleases(owner, repo);
+
   fromVersion = normalizeVersion(fromVersion);
   toVersion = normalizeVersion(toVersion);
 
@@ -187,6 +196,7 @@ export const filterDropdownVersions = (versions, filters) => {
   }
 
   versions = versions.filter((v) => !v?.toLowerCase().includes("preview"));
+  versions = versions.filter((v) => !v?.toLowerCase().includes("alpha"));
 
   return versions;
 };
