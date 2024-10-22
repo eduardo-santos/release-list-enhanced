@@ -83,10 +83,14 @@ export const getAvailableVersions = async (owner, repo) => {
 export const normalizeVersion = (version) => {
   if (typeof version !== "string") return null;
 
-  // If the version includes a package name, strip it
+  // If the version includes a package name, strip it (for both @ and -v)
   const atIndex = version.lastIndexOf("@");
+  const dashIndex = version.lastIndexOf("-v");
+
   if (atIndex !== -1) {
     version = version.slice(atIndex + 1);
+  } else if (dashIndex !== -1) {
+    version = version.slice(dashIndex + 2); // Remove "-v" prefix
   }
 
   // If the version starts with "v", remove it
